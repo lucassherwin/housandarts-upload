@@ -1,9 +1,13 @@
 import React, { useEffect, useState} from 'react';
-import Upload from './components/Upload.js'
+import Upload from './components/Upload.js';
 import { db } from './firebase/firebase';
+import { Route, Switch, useHistory } from 'react-router-dom';
+import PostPage from './components/PostPage.js';
+import Home from './components/Home.js';
 
 export default function App() {
   const [posts, setPosts] = useState([]);
+  const [currentPost, setCurrentPost] = useState(null);
 
   useEffect(() => {
     db.collection('posts').get().then((snapshot) => {
@@ -13,14 +17,26 @@ export default function App() {
       })
     })
   }, [])
+
+  let history = useHistory();
+  const handleClick = (post) => {
+    setCurrentPost(post);
+    history.push(`/${post.title}`);
+  }
+
   return (
     <div>
-      <Upload />
-      {
-        posts.map((post) => (
-          <img src={post.src} alt={post.title} height='200px' />
-        ))
-      }
+      <Switch>
+        <Route exact path='/'>
+          <Home posts={posts} handleClick={handleClick} />
+        </Route>
+        <Route exact path='/upload'>
+          <Upload />
+        </Route>
+        <Route exact path='/:title'>
+          <PostPage currentPost={currentPost} />
+        </Route>
+      </Switch>
     </div>
   )
 }
