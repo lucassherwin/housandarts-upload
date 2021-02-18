@@ -12,22 +12,55 @@ export default function PostPage({ currentPost }) {
   const [title, setTitle] = useState(currentPost.data.title);
   const [description, setDescription] = useState(currentPost.data.description);
 
+  const [additionalImages, setAdditionalImages] = useState([]);
+  const allInputs = {imgUrl: ''};
+
+  const [imageAsUrl, setImageAsUrl] = useState(allInputs);
+
+
+  const [imageAsFile, setImageAsFile] = useState('');
+  const handleImageAsFile = (event) => {
+    const image = event.target.files[0];
+    setImageAsFile(imageFile => image);
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // get the doc to update by the id
-    const updateDoc = db.collection('posts').doc(currentPost.id);
-    // update
-    return updateDoc.update({
-      title,
-      description
-    })
-    .then(() => {
-      console.log('success');
-    })
-    .catch((error) => {
-      console.log('error', error);
-    })
-    // save title, description, additional images to firebase
+    if(imageAsFile === '' )
+    {
+      console.error(`not an image, the image file is a ${typeof(imageAsFile)}`);
+    }
+
+    console.log(event.target)
+
+    // let post = {data: doc.data(), id: doc.id}
+    // setPosts(prevState => [...prevState, post]);
+
+    
+
+    // const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
+
+    // uploadTask.on('state_changed', 
+    // (snapShot) => {
+    //   // takes a snap shot of the process as it is happening
+    //   console.log('here', snapShot)
+    // }, (err) => {
+    //   // catches the errors
+    //   console.log(err)
+    // }, () => {
+    //   // gets the functions from storage refences the image storage in firebase by the children
+    //   // gets the download url then sets the image from firebase as the value for the imgUrl key:
+    //   storage.ref('images').child(imageAsFile.name).getDownloadURL()
+    //     .then(fireBaseUrl => {
+    //       // console.log('test', fireBaseUrl) this is the img url
+    //       setImageAsUrl(prevObject => ({...prevObject, imgUrl: fireBaseUrl}))
+        
+    //       db.collection('posts').update({
+    //         title,
+    //         description,
+    //       })
+    //     })
+    //   })
   }
 
   return (
@@ -38,7 +71,7 @@ export default function PostPage({ currentPost }) {
         <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <TextField id="standard-basic" label='Title' value={title} onChange={(event) => setTitle(event.target.value)} />
           <TextField id="standard-basic" label='Description' value={description} onChange={(event) => setDescription(event.target.value)} />
-          <input accept="image/*" id="icon-button-file" type="file" style={{display: 'none'}} />
+          <input accept="image/*" id="icon-button-file" type="file" style={{display: 'none'}} onChange={handleImageAsFile} multiple={true} />
           <label htmlFor="icon-button-file">
           <IconButton color="primary" aria-label="upload picture" component="span">
             <PhotoLibraryIcon />
@@ -56,3 +89,20 @@ export default function PostPage({ currentPost }) {
     </div>
   )
 }
+
+    // event.preventDefault();
+    // get the doc to update by the id
+    // const updateDoc = db.collection('posts').doc(currentPost.id);
+    // // update
+    // return updateDoc.update({
+    //   title,
+    //   description,
+    //   additionalImages
+    // })
+    // .then(() => {
+    //   console.log('success');
+    // })
+    // .catch((error) => {
+    //   console.log('error', error);
+    // })
+    // save title, description, additional images to firebase

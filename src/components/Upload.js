@@ -54,7 +54,7 @@ export default function App() {
   return (
     <div>
       <form onSubmit={uploadImage}>
-        <input type='file' onChange={handleImageAsFile} />
+        <input type='file' onChange={handleImageAsFile} multiple={true} />
         <input type='text' onChange={(event) => setTitle(event.target.value)} name='title' placeholder='Enter a title' value={title}  />
         <input type='text' onChange={(event) => setDescription(event.target.value)} name='description' placeholder='Enter a description' value={description} />
         <select name='tags' value={tag} onChange={(event) => setTag(event.target.value)}>
