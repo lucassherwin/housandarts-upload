@@ -24,6 +24,11 @@ export default function App() {
     history.push(`/${post.title}`);
   }
 
+
+  // TODO:
+  // add edit option to each post
+  // auth
+
   return (
     <div>
       <Switch>
