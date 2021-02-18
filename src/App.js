@@ -12,7 +12,8 @@ export default function App() {
   useEffect(() => {
     db.collection('posts').get().then((snapshot) => {
       snapshot.docs.forEach(doc => {
-        let post = doc.data();
+        // console.log(doc.id)
+        let post = {data: doc.data(), id: doc.id}
         setPosts(prevState => [...prevState, post]);
       })
     })
@@ -21,7 +22,7 @@ export default function App() {
   let history = useHistory();
   const handleClick = (post) => {
     setCurrentPost(post);
-    history.push(`/${post.title}`);
+    history.push(`/${post.id}`);
   }
 
 

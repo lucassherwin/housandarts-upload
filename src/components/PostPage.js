@@ -5,18 +5,31 @@ import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
+import {storage, db} from "../firebase/firebase"
 
 export default function PostPage({ currentPost }) {
   const [edit, setEdit] = useState(false); // when this is true the post can be edited
-  const [title, setTitle] = useState(currentPost.title);
-  const [description, setDescription] = useState(currentPost.description);
+  const [title, setTitle] = useState(currentPost.data.title);
+  const [description, setDescription] = useState(currentPost.data.description);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(title, description);
+    // get the doc to update by the id
+    const updateDoc = db.collection('posts').doc(currentPost.id);
+    // update
+    return updateDoc.update({
+      title,
+      description
+    })
+    .then(() => {
+      console.log('success');
+    })
+    .catch((error) => {
+      console.log('error', error);
+    })
     // save title, description, additional images to firebase
-
   }
+
   return (
     <div>
       <IconButton onClick={() => setEdit(true)}><EditIcon/></IconButton>
@@ -35,18 +48,11 @@ export default function PostPage({ currentPost }) {
         </form>
       </div> : 
       <div>
-        <h1>{currentPost.title}</h1>
-        <p>{currentPost.description}</p>
+        <h1>{currentPost.data.title}</h1>
+        <p>{currentPost.data.description}</p>
       </div>
       }
-      <img src={currentPost.src} alt={currentPost.title} height='200px' />
+      <img src={currentPost.data.src} alt={currentPost.data.title} height='200px' />
     </div>
   )
 }
-
-
-// when a user clicks on the edit icon:
-// the title and description should become text inputs
-// button to upload additional images
-  // have to figure out a way to get that current document
-  // look into saving the document id from Firebase

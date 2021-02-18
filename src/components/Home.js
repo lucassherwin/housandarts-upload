@@ -7,8 +7,8 @@ export default function Home({ posts, handleClick }) {
       <Container>
       {
         posts ? posts.map(post => (
-          <Post key={post.title} onClick={() => handleClick(post)}>
-            <Image src={post.src} alt={post.title} />
+          <Post key={post.data.title} onClick={() => handleClick(post)}>
+            <Image src={post.data.src} alt={post.data.title} />
           </Post>
         ))
         : null
