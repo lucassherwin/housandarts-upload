@@ -17,50 +17,45 @@ export default function PostPage({ currentPost }) {
 
   const [imageAsUrl, setImageAsUrl] = useState(allInputs);
 
+  const [imageUrls, setImageUrls] = useState([]);
 
-  const [imageAsFile, setImageAsFile] = useState('');
+  // array of strings
+  const [imagesAsFiles, setImagesAsFile] = useState([]);
   const handleImageAsFile = (event) => {
-    const image = event.target.files[0];
-    setImageAsFile(imageFile => image);
+    // const image = event.target.files[0];
+    const files = Array.from(event.target.files);
+    files.forEach(f => {
+      setImagesAsFile(images => [...images, f]);
+    })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if(imageAsFile === '' )
+    if(imagesAsFiles.length === 0)
     {
-      console.error(`not an image, the image file is a ${typeof(imageAsFile)}`);
+      console.error('There was an error', imagesAsFiles);
     }
-
-    console.log(event.target)
-
-    // let post = {data: doc.data(), id: doc.id}
-    // setPosts(prevState => [...prevState, post]);
-
     
-
-    // const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
-
-    // uploadTask.on('state_changed', 
-    // (snapShot) => {
-    //   // takes a snap shot of the process as it is happening
-    //   console.log('here', snapShot)
-    // }, (err) => {
-    //   // catches the errors
-    //   console.log(err)
-    // }, () => {
-    //   // gets the functions from storage refences the image storage in firebase by the children
-    //   // gets the download url then sets the image from firebase as the value for the imgUrl key:
-    //   storage.ref('images').child(imageAsFile.name).getDownloadURL()
-    //     .then(fireBaseUrl => {
-    //       // console.log('test', fireBaseUrl) this is the img url
-    //       setImageAsUrl(prevObject => ({...prevObject, imgUrl: fireBaseUrl}))
-        
-    //       db.collection('posts').update({
-    //         title,
-    //         description,
-    //       })
-    //     })
-    //   })
+    imagesAsFiles.forEach(imageAsFile => {
+      const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile);
+      uploadTask.on('state_changed', 
+      (snapShot) => {
+        // snapshot of the process
+        console.log(snapShot);
+      }, (err) => {
+        console.error(err);
+      }, () => {
+        // gets the functions from storage refences the image storage in firebase by the children
+        // gets the download url then sets the image from firebase as the value for the imgUrl key:
+        storage.ref('images').child(imageAsFile.name).getDownloadURL()
+        .then(fireBaseUrl => {
+          console.log(typeof(fireBaseUrl));
+          // save urls in state
+          setImageUrls(urls => [...urls, {imgUrl: fireBaseUrl}]);
+          console.log(imageUrls)
+        })
+      })
+    })
   }
 
   return (

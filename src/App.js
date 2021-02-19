@@ -27,7 +27,6 @@ export default function App() {
 
 
   // TODO:
-  // add edit option to each post
   // auth
 
   return (

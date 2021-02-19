@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import {storage, db} from "../firebase/firebase"
+import { storage, db } from "../firebase/firebase"
 
-export default function App() {
+export default function Upload() {
   // handle images
   const allInputs = {imgUrl: ''};
   const [imageAsFile, setImageAsFile] = useState('');
